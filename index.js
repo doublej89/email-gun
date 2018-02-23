@@ -5,14 +5,8 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/keys');
 
-//require('./models/User');
-const { Schema } = mongoose;
+require('./models/User');
 
-const userSchema = new Schema({
-    googleId: String
-});
-
-mongoose.model('users', userSchema);
 require('./services/passport');
 const authRoutes = require('./routes/authRoutes');
 const billingRoutes = require('./routes/billingRoutes');
@@ -31,6 +25,15 @@ app.use(passport.session());
 
 authRoutes(app);
 billingRoutes(app);
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+
+    const path = require('path');
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+}
 
 const PORT = process.env.PORT || 5000;
 
