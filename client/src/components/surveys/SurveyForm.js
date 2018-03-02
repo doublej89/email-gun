@@ -11,7 +11,7 @@ class SurveyForm extends Component {
                 <Field label="Survey Title" type="text" name="title" component={SurveyField}/>
                 <Field label="Subject Line" type="text" name="subject" component={SurveyField}/>
                 <Field label="Email Body" type="text" name="body" component={SurveyField}/>
-                <Field label="Recipient List" type="text" name="emails" component={SurveyField}/>
+                <Field label="Recipient List" type="text" name="recipients" component={SurveyField}/>
             </div>
         );
     }
@@ -43,12 +43,13 @@ function validate(values) {
     if (!values.body) {
         error.body = 'Body field cannot be left empty!'
     }
-    error.emails = validateEmails(values.emails || '');
+    error.recipients = validateEmails(values.recipients || '');
 
     return error;
 }
 
 export default reduxForm({
     validate: validate,
-    form: 'surveyForm'
+    form: 'surveyForm',
+    destroyOnUnmount: false
 })(SurveyForm);
